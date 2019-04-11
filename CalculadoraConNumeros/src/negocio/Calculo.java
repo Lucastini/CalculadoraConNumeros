@@ -3,7 +3,7 @@ package negocio;
 
 public class Calculo {
     private float arg1;
-    private int operacion;
+    private char operacion;
     
     
     public Calculo(){
@@ -11,30 +11,30 @@ public class Calculo {
         operacion=0;
     }
 
-    public float getArgumento1() {
+    public float getArg1() {
         return arg1;
     }
-    public void setArgumento1(float argumento1) {
+    public void setArg1(float argumento1) {
         this.arg1 = argumento1;
     }
     public int getOperacion() {
         return operacion;
     }
-    public void setOperacion(int operacion) {
+    public void setOperacion(char operacion) {
         this.operacion = operacion;
     }
     
     public float calculo(float arg2){
         float res;
         switch(operacion){
-            case 1:
+            case '+':
                 res=arg1+arg2;
                 break;
-            case 2:
+            case '-':
                 res=arg1-arg2;
-            case 3:
+            case '*':
                 res=arg1*arg2;
-            case 4:
+            case '/':
                 res=arg1/arg2;
             default:
                 res=0;

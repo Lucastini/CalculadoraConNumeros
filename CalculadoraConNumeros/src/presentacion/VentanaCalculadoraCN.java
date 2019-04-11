@@ -63,6 +63,7 @@ public class VentanaCalculadoraCN extends JFrame{
         btnDivision.setSize(50, 30);
         btnDivision.setLocation(210, 70);
         this.getContentPane().add(btnDivision);
+        btnDivision.addActionListener(new EscuchaOperaciones('/'));
         btnBorrar=new JButton("C");
         btnBorrar.setSize(50, 70);
         btnBorrar.setLocation(270, 70);
@@ -86,6 +87,7 @@ public class VentanaCalculadoraCN extends JFrame{
         btnMultiplicacion.setSize(50, 30);
         btnMultiplicacion.setLocation(210, 110);
         this.getContentPane().add(btnMultiplicacion);
+        btnMultiplicacion.addActionListener(new EscuchaOperaciones('*'));
         btn1=new JButton("1");
         btn1.setSize(50, 30);
         btn1.setLocation(30, 150);
@@ -105,10 +107,12 @@ public class VentanaCalculadoraCN extends JFrame{
         btnMenos.setSize(50, 30);
         btnMenos.setLocation(210, 150);
         this.getContentPane().add(btnMenos);
+        btnMenos.addActionListener(new EscuchaOperaciones('-'));
         btnIgual=new JButton("=");
         btnIgual.setSize(50, 70);
         btnIgual.setLocation(270, 150);
         this.getContentPane().add(btnIgual);
+        btnIgual.addActionListener(new EscuchaIgual());
         btn0=new JButton("0");
         btn0.setSize(50, 30);
         btn0.setLocation(30, 190);
@@ -125,6 +129,7 @@ public class VentanaCalculadoraCN extends JFrame{
         btnMas.setSize(50, 30);
         btnMas.setLocation(210, 190);
         this.getContentPane().add(btnMas);
+        btnMas.addActionListener(new EscuchaOperaciones('+'));
         
         calc=new Calculo();
     }
@@ -139,9 +144,33 @@ public class VentanaCalculadoraCN extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             txtPantalla.setText(txtPantalla.getText()+String.valueOf(num));
-            
         }
-                
+    }
+    
+    class EscuchaOperaciones implements ActionListener{
+        private char signo;
+        
+        public EscuchaOperaciones(char s){
+            signo=s;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            calc.setOperacion(signo);
+            calc.setArg1(Float.parseFloat(txtPantalla.getText()));
+            txtPantalla.setText("");
+            txtPantalla.requestFocus();
+            System.out.println(calc.getOperacion());
+            System.out.println(calc.getArg1());
+        }
+    }
+    
+    class EscuchaIgual implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            float res=calc.calculo(Float.parseFloat(txtPantalla.getText()));
+            txtPantalla.setText(String.valueOf((int)(res*100)/100f));
+        }
     }
         
         
