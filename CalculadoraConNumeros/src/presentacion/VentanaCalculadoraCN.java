@@ -29,6 +29,7 @@ public class VentanaCalculadoraCN extends JFrame{
     private JButton btnPunto;
     private JButton btnMas;
     private Calculo calc;
+    private int contClickBorrar;
     
     public VentanaCalculadoraCN(){
         this.setTitle("Calculadora con Numeros");
@@ -37,13 +38,14 @@ public class VentanaCalculadoraCN extends JFrame{
         this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
+        
         txtPantalla=new JTextField();
         txtPantalla.setSize(290, 30);
         txtPantalla.setLocation(30, 30);
         txtPantalla.setHorizontalAlignment(JTextField.RIGHT);
         this.getContentPane().add(txtPantalla);
         txtPantalla.setEditable(false);
-        
+               
         btn7=new JButton("7");
         btn7.setSize(50, 30);
         btn7.setLocation(30, 70);
@@ -68,6 +70,7 @@ public class VentanaCalculadoraCN extends JFrame{
         btnBorrar.setSize(50, 70);
         btnBorrar.setLocation(270, 70);
         this.getContentPane().add(btnBorrar);
+        btnBorrar.addActionListener(new EscuchaBorrar());
         btn4=new JButton("4");
         btn4.setSize(50, 30);
         btn4.setLocation(30, 110);
@@ -117,14 +120,17 @@ public class VentanaCalculadoraCN extends JFrame{
         btn0.setSize(50, 30);
         btn0.setLocation(30, 190);
         this.getContentPane().add(btn0);
+        btn0.addActionListener(new EscuchaNumeros(0));
         btnPositNegat=new JButton("+/-");
         btnPositNegat.setSize(50, 30);
         btnPositNegat.setLocation(90, 190);
         this.getContentPane().add(btnPositNegat);
+        btnPositNegat.addActionListener(new EscucharPosNeg());
         btnPunto=new JButton(".");
         btnPunto.setSize(50, 30);
         btnPunto.setLocation(150, 190);
         this.getContentPane().add(btnPunto);
+        btnPunto.addActionListener(new EscuchaPunto());
         btnMas=new JButton("+");
         btnMas.setSize(50, 30);
         btnMas.setLocation(210, 190);
@@ -132,6 +138,14 @@ public class VentanaCalculadoraCN extends JFrame{
         btnMas.addActionListener(new EscuchaOperaciones('+'));
         
         calc=new Calculo();
+    }
+    
+    public float valorEnPantalla(){
+        float res=0f;
+        String pant=txtPantalla.getText().trim();
+        if(!pant.equals(""))
+            res=Float.parseFloat(pant);
+        return res;
     }
     
     class EscuchaNumeros implements ActionListener{
@@ -143,7 +157,27 @@ public class VentanaCalculadoraCN extends JFrame{
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            contClickBorrar=0;
             txtPantalla.setText(txtPantalla.getText()+String.valueOf(num));
+        }
+    }
+    
+    class EscuchaPunto implements ActionListener{
+        
+        @Override
+        public void actionPerformed(ActionEvent e){
+           contClickBorrar=0;
+           txtPantalla.setText(txtPantalla.getText()+'.');
+        }
+    }
+    
+    class EscucharPosNeg implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            contClickBorrar=0;
+            float res, capt=valorEnPantalla();
+            res=capt*(-1);
+            txtPantalla.setText(String.valueOf(res));
         }
     }
     
@@ -156,11 +190,12 @@ public class VentanaCalculadoraCN extends JFrame{
         
         @Override
         public void actionPerformed(ActionEvent e) {
+            contClickBorrar=0;
             calc.setOperacion(signo);
-            calc.setArg1(Float.parseFloat(txtPantalla.getText()));
+            calc.setArg1(valorEnPantalla());
             txtPantalla.setText("");
-            txtPantalla.requestFocus();
-            System.out.println(calc.getOperacion());
+            //txtPantalla.requestFocus();
+            System.out.println(""+calc.getOperacion());
             System.out.println(calc.getArg1());
         }
     }
@@ -168,11 +203,27 @@ public class VentanaCalculadoraCN extends JFrame{
     class EscuchaIgual implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            float res=calc.calculo(Float.parseFloat(txtPantalla.getText()));
+            contClickBorrar=0;
+            float res=calc.calculo(valorEnPantalla());
             txtPantalla.setText(String.valueOf((int)(res*100)/100f));
         }
     }
-        
+    
+    class EscuchaBorrar implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            contClickBorrar++;
+            if(contClickBorrar>1){
+                txtPantalla.setText("");
+                calc.setArg1(0);
+                calc.setOperacion((char)0);
+                contClickBorrar=0;
+            }
+            else
+                txtPantalla.setText("");
+        }
+    }
+           
         
         
 }

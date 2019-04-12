@@ -4,6 +4,7 @@ package negocio;
 public class Calculo {
     private float arg1;
     private char operacion;
+    private int contClickBorrar;
     
     
     public Calculo(){
@@ -25,17 +26,20 @@ public class Calculo {
     }
     
     public float calculo(float arg2){
-        float res;
+        float res=0f;
         switch(operacion){
             case '+':
                 res=arg1+arg2;
                 break;
             case '-':
                 res=arg1-arg2;
+                break;
             case '*':
                 res=arg1*arg2;
+                break;
             case '/':
                 res=arg1/arg2;
+                break;
             default:
                 res=0;
         }
@@ -43,6 +47,8 @@ public class Calculo {
         operacion=0;
         return res;
     }
+    
+    
     
     
     
